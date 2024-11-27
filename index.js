@@ -37,8 +37,8 @@ app.get('/new', async (_, res) => {
 
 // remove latest todo
 app.get('/remove', async (_, res) => {
-	const todo = await Todo.findOne({}).sort({ updatedAt: -1 })
-	await todo.remove()
+	const [todo] = await Todo.find({}).sort({ updatedAt: -1 });
+	await todo.deleteOne();
 	console.log('Todo removed');
 	res.redirect('/')
 })

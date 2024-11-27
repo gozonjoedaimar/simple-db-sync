@@ -51,7 +51,6 @@ async function syncRemoteToLocal() {
 	const lastSynced = await getLastSyncedTimestamp();
 
 	const changes = await remoteDB.collection('todos').find({ updatedAt: { $gt: lastSynced } }).toArray();
-	console.log(changes.length);
 
 	try {
 		for (const doc of changes) {

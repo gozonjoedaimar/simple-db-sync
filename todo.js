@@ -25,7 +25,7 @@ todoSchema.pre('save', function(next) {
 	ChangeLog.create(changeLog).finally(() => next());
 })
 
-todoSchema.pre('remove', function(next) {
+todoSchema.pre('deleteOne', { document: true, query: false }, function(next) {
 	const changelog = {
 		operationType: 'delete',
 		documentId: this._id,
