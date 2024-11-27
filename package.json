@@ -1,0 +1,24 @@
+{
+  "name": "mdbsync",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "concurrently -i -c \"red,blue\" \"cross-env PORT=3001 MONGODB_URI=mongodb://localhost:27017/mdbsync1 node index.js\" \"cross-env PORT=3002 MONGODB_URI=mongodb://localhost:27017/mdbsync2 node index.js\"",
+    "dev": "concurrently -i -c \"red,blue\" \"cross-env PORT=3001 MONGODB_URI=mongodb://localhost:27017/mdbsync1 nodemon index.js\" \"cross-env PORT=3002 MONGODB_URI=mongodb://localhost:27017/mdbsync2 nodemon index.js\""
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "devDependencies": {
+    "concurrently": "^9.1.0",
+    "cross-env": "^7.0.3",
+    "nodemon": "^3.1.7"
+  },
+  "dependencies": {
+    "dotenv": "^16.4.5",
+    "express": "^4.21.1",
+    "mongoose": "^8.8.3"
+  }
+}
