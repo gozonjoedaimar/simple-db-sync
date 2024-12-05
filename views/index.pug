@@ -6,9 +6,9 @@ html
 		script(src='app.js')
 	body
 		h1
-			a(href='/sync') mdbsync
+			a(href='/sync')= `${envname} server`
 		p Current connection: 
-			span= currentconn
+			strong= currentconn
 		form(method='GET', action='/new')
 			input(type='text' name='title')
 			button.btn(type='submit') Add

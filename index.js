@@ -19,6 +19,7 @@ app.get('/', async (_, res) => {
 	res.render('index', {
 		list: todos || [],
 		currentconn: process.env.MONGODB_URI,
+		envname: process.env.ENV_NAME,
 	});
 })
 

@@ -51,6 +51,7 @@ async function syncRemoteToLocal() {
 	const lastSynced = await getLastSyncedTimestamp();
 
 	const changes = await remoteDB.collection('todos').find({ updatedAt: { $gt: lastSynced } }).toArray();
+	const deletes = await remoteDB.collection('changelog').find({ operationType: 'delete' }).toArray();
 
 	try {
 		for (const doc of changes) {
@@ -69,6 +70,29 @@ async function syncRemoteToLocal() {
 				createdAt: new Date(),
 			});
 		}
+		for (const doc of deletes) {
+			const item = await localDB.collection('todos').findOne({ _id: doc.documentId });
+
+			// skip if item not found
+			if (!item) {
+				continue;
+			}
+
+			// if doc.updated at is greateer than item.updated_at, then delete it
+			if (item.updatedAt < doc.updatedAt) {
+				await localDB.collection('todos').deleteOne({ _id: doc.documentId });
+				await localDB.collection('changelog').insertOne({
+					operationType: 'delete',
+					documentId: doc.documentId,
+					synced: true,
+					updatedAt: new Date(),
+					createdAt: new Date(),
+				});
+			}
+		}
+		// drop remote changelog
+		await remoteDB.collection('changelog').drop();
+
 	} catch (err) {
 		console.error(err.message)
 	}
