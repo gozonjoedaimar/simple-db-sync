@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-require('dotenv').config();
+require('@dotenvx/dotenvx').config();
 
 // create connections to local and remote db
 const localDB = mongoose.createConnection(process.env.LOCAL_DB);

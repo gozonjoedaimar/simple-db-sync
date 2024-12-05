@@ -2,14 +2,16 @@ const express = require('express');
 const mongoose = require('mongoose');
 const dbsync = require('./sync');
 
-require('dotenv').config();
+require('@dotenvx/dotenvx').config();
 
 const Todo = require('./todo');
 
 const app = express();
 const port = process.env.PORT || 3000;
 
-mongoose.connect(process.env.MONGODB_URI);
+const conn = process.env.MONGODB_URI || `${process.env.MONGODB_HOST}/${process.env.DB_NAME}`;
+
+mongoose.connect(conn);
 
 app.set('view engine', 'pug');
 app.use(express.static('public'));
@@ -18,7 +20,7 @@ app.get('/', async (_, res) => {
 	const todos = await Todo.find({});
 	res.render('index', {
 		list: todos || [],
-		currentconn: process.env.MONGODB_URI,
+		currentconn: conn,
 		envname: process.env.ENV_NAME,
 	});
 })
