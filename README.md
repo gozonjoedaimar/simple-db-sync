@@ -7,6 +7,7 @@
 ```terminal
 git clone https://github.com/gozonjoedaimar/simple-db-sync.git
 npm install
+cp .env.example .env
 npm run dev
 ```
 
