@@ -11,9 +11,19 @@ const port = process.env.PORT || 3000;
 
 mongoose.connect(process.env.MONGODB_URI);
 
-// show todos
+app.set('view engine', 'pug');
+app.use(express.static('public'));
+
 app.get('/', async (_, res) => {
 	const todos = await Todo.find({});
+	res.render('index', {
+		list: todos || [],
+		currentconn: process.env.MONGODB_URI,
+	});
+})
+
+// show todos
+app.get('/list', async (_, res) => {
 	res.json({
 		list: todos || [],
 		currentconn: process.env.MONGODB_URI,
@@ -23,24 +33,28 @@ app.get('/', async (_, res) => {
 });
 
 // create new todo
-app.get('/new', async (_, res) => {
+app.get('/new', async (req, res) => {
+	const data = req.query;
 	const todo = new Todo({
-		title: `Todo title (${Date.now()})`
+		title: data.title || `Todo title (${Date.now()})`
 	})
 
 	await todo.save()
 	console.log('New todo created');
+	console.log(data)
 
 	// redirect to home
-	res.redirect('/')
+	res.redirect('/sync')
 });
 
 // remove latest todo
-app.get('/remove', async (_, res) => {
-	const [todo] = await Todo.find({}).sort({ updatedAt: -1 });
+app.get('/remove', async (req, res) => {
+	const data = req.query;
+	const q = data.id ? { _id: data.id } : {};
+	const [todo] = await Todo.find(q).sort({ updatedAt: -1 });
 	await todo.deleteOne();
 	console.log('Todo removed');
-	res.redirect('/')
+	res.redirect('/sync')
 })
 
 app.get('/sync', async (_, res) => {

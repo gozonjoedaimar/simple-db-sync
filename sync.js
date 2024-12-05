@@ -8,7 +8,7 @@ const remoteDB = mongoose.createConnection(process.env.REMOTE_DB);
 
 async function getLastSyncedTimestamp() {
 	const lastSynced = await localDB.collection('changelog').find({ synced: true }).sort({ updatedAt: -1 }).toArray();
-	return lastSynced[0].updatedAt;
+	return lastSynced[0]?.updatedAt;
 }
 
 async function syncLocalToRemote() {

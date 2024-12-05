@@ -1,0 +1,19 @@
+doctype html
+html
+	head
+		title mdbsync
+		link(rel='stylesheet', href='css/app.css')
+		script(src='app.js')
+	body
+		h1
+			a(href='/sync') mdbsync
+		p Current connection: 
+			span= currentconn
+		form(method='GET', action='/new')
+			input(type='text' name='title')
+			button.btn(type='submit') Add
+		div.list
+			each todo in list
+				div.item
+					span.title= todo.title
+						a.remove(href='/remove?id='+todo._id) del
